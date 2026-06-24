@@ -1,0 +1,59 @@
+# ---------- Gradle ----------
+.gradle/
+build/
+/build
+**/build/
+!**/src/**/build/
+gradle-app.setting
+!gradle-wrapper.jar
+!gradle-wrapper.properties
+.gradletasknamecache
+
+# ---------- IDE: Android Studio / IntelliJ ----------
+*.iml
+*.ipr
+*.iws
+.idea/
+captures/
+.externalNativeBuild/
+.cxx/
+
+# ---------- IDE: VS Code ----------
+.vscode/
+*.code-workspace
+
+# ---------- Local config (machine-specific, never commit) ----------
+local.properties
+/local.properties
+keystore.properties
+*.jks
+*.keystore
+
+# ---------- Android build outputs ----------
+/app/release/
+/app/debug/
+*.apk
+*.aab
+*.aar
+*.ap_
+*.dex
+output.json
+output-metadata.json
+
+# ---------- Logs & temp ----------
+*.log
+hs_err_pid*
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ---------- Kotlin ----------
+.kotlin/
+*.hprof
+
+# ---------- Misc ----------
+proguard/
+local/
+
+# ---------- 项目特有 ----------
+# 图标源文件（已生成进 mipmap 各密度，根目录的保留供 README 引用，无需忽略）

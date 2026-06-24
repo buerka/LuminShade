@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">晦页</string>
+    <string name="app_subtitle">LuminShade · 全局悬浮遮罩</string>
+
+    <string name="section_permission">悬浮窗权限</string>
+    <string name="section_mask">遮罩控制</string>
+    <string name="section_preset">遮罩预设</string>
+
+    <string name="go_to_settings">前往授权</string>
+    <string name="btn_battery_optimize">忽略电池优化（防后台被杀）</string>
+    <string name="btn_add_mask">+ 新建遮罩</string>
+    <string name="btn_clear_masks">清空全部</string>
+    <string name="btn_save_preset">保存当前</string>
+    <string name="btn_new_preset">新建预设</string>
+    <string name="label_opacity">遮罩不透明度</string>
+
+    <string name="permission_granted">✓ 悬浮窗权限已授予</string>
+    <string name="permission_denied">✗ 未授权，功能无法使用</string>
+
+    <string name="dialog_permission_title">需要悬浮窗权限</string>
+    <string name="dialog_permission_msg">晦页需要「显示在其他应用上层」权限才能在全局悬浮遮罩。请在设置中允许。</string>
+    <string name="dialog_new_preset">新建预设</string>
+    <string name="dialog_rename">重命名预设</string>
+    <string name="dialog_delete">删除预设</string>
+    <string name="dialog_delete_msg">确认删除预设「%1$s」？</string>
+
+    <string name="hint_preset_name">预设名称（如：数学、英语）</string>
+    <string name="create">创建</string>
+    <string name="rename">重命名</string>
+    <string name="delete">删除</string>
+    <string name="cancel">取消</string>
+    <string name="load">载入</string>
+
+    <string name="preset_loaded">已载入预设：%1$s</string>
+    <string name="preset_saved">已保存到预设：%1$s</string>
+    <string name="no_active_preset">请先载入一个预设</string>
+
+    <string name="notif_title">晦页运行中</string>
+    <string name="notif_text">单击悬浮球显隐遮罩 · 长按进入编辑模式</string>
+    <string name="toast_edit_on">编辑模式 · 单击悬浮球新增遮罩</string>
+    <string name="toast_edit_off">已退出编辑模式</string>
+
+    <string name="usage_hint">悬浮球操作：\n• 单击（普通模式）→ 一键显隐所有遮罩\n• 单击（编辑模式）→ 新增遮罩\n• 长按 → 进入/退出编辑模式（球变蓝紫，图标变 ＋）\n• 拖动 → 移动悬浮球至屏幕任意边缘\n\n编辑模式下（遮罩出现淡蓝色边框）：\n• 拖动遮罩 → 移动位置\n• 拖动右下角 ⇲ → 独立调节宽高\n• 点击右上角 × → 删除遮罩\n\n普通模式下：\n• 长按遮罩 → 临时透明查看答案，松手立即恢复\n\n预设：\n• 调整好布局后点「保存当前」→ 下次直接载入</string>
+</resources>
