@@ -14,6 +14,26 @@
     <string name="btn_save_preset">保存当前</string>
     <string name="btn_new_preset">新建预设</string>
     <string name="label_opacity">遮罩不透明度</string>
+    <string name="label_color_match">颜色匹配模式（遮罩透明，仅替换匹配颜色）</string>
+    <string name="btn_match_color">匹配颜色</string>
+    <string name="btn_replace_color">替换为</string>
+    <string name="btn_pick_match_color">屏幕取匹配色</string>
+    <string name="btn_pick_replace_color">屏幕取替换色</string>
+    <string name="label_tolerance">匹配容差：%1$d</string>
+    <string name="label_spread_radius">周边改色范围：%1$d px</string>
+    <string name="dialog_color_title">选择颜色</string>
+    <string name="hint_color_hex">#RRGGBB 或 #AARRGGBB</string>
+    <string name="invalid_color">颜色格式无效</string>
+    <string name="color_picker_match_title">取匹配颜色</string>
+    <string name="color_picker_replace_title">取替换颜色</string>
+    <string name="color_picker_hint">拖动十字球定位，左上角确认取色</string>
+    <string name="confirm_pick_color">确认</string>
+    <string name="toast_color_picked">已取色：%1$s</string>
+    <string name="toast_capture_started">屏幕捕获已开启</string>
+    <string name="toast_capture_failed">屏幕捕获启动失败：%1$s</string>
+    <string name="toast_capture_waiting">正在等待第一帧画面，请稍后再取色</string>
+    <string name="toast_picker_ready">拖动十字球到目标像素，在左上角确认取色</string>
+    <string name="toast_picker_cancelled">已取消取色</string>
 
     <string name="permission_granted">✓ 悬浮窗权限已授予</string>
     <string name="permission_denied">✗ 未授权，功能无法使用</string>
@@ -40,6 +60,7 @@
     <string name="notif_text">单击悬浮球显隐遮罩 · 长按进入编辑模式</string>
     <string name="toast_edit_on">编辑模式 · 单击悬浮球新增遮罩</string>
     <string name="toast_edit_off">已退出编辑模式</string>
+    <string name="toast_capture_required">颜色匹配需要先授予屏幕捕获权限</string>
 
-    <string name="usage_hint">悬浮球操作：\n• 单击（普通模式）→ 一键显隐所有遮罩\n• 单击（编辑模式）→ 新增遮罩\n• 长按 → 进入/退出编辑模式（球变蓝紫，图标变 ＋）\n• 拖动 → 移动悬浮球至屏幕任意边缘\n\n编辑模式下（遮罩出现淡蓝色边框）：\n• 拖动遮罩 → 移动位置\n• 拖动右下角 ⇲ → 独立调节宽高\n• 点击右上角 × → 删除遮罩\n\n普通模式下：\n• 长按遮罩 → 临时透明查看答案，松手立即恢复\n\n预设：\n• 调整好布局后点「保存当前」→ 下次直接载入</string>
+    <string name="usage_hint">悬浮球操作：\n• 单击（普通模式）→ 一键显隐所有遮罩\n• 单击（编辑模式）→ 新增遮罩\n• 长按 → 进入/退出编辑模式（球变蓝紫，图标变 ＋）\n• 拖动 → 移动悬浮球至屏幕任意边缘\n\n编辑模式下（遮罩出现淡蓝色边框）：\n• 拖动遮罩 → 移动位置\n• 拖动右下角 ⇲ → 独立调节宽高\n• 点击右上角 × → 删除遮罩\n\n普通模式下：\n• 长按遮罩 → 临时透明查看答案，松手立即恢复\n\n颜色匹配：\n• 开启后需授予屏幕捕获权限\n• 可手动输入颜色，也可点「屏幕取匹配色」进入取色模式\n• 取色模式下可正常操作屏幕，拖动十字球定位，左上角显示色号和放大区域\n• 在左上角预览面板确认或取消取色\n• 匹配颜色会被替换为目标颜色\n• 周边改色范围会把匹配点外一圈像素一起改色\n\n预设：\n• 调整好布局后点「保存当前」→ 下次直接载入</string>
 </resources>

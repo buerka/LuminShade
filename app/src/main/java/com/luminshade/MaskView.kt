@@ -2,6 +2,7 @@ package com.luminshade
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
@@ -13,6 +14,7 @@ import com.luminshade.data.MaskData
 import kotlin.math.abs
 import kotlin.math.hypot
 import kotlin.math.max
+import kotlin.math.min
 
 @SuppressLint("ViewConstructor")
 class MaskView(
@@ -29,8 +31,10 @@ class MaskView(
     var windowManager: WindowManager? = null
 
     private var isPeeking = false
+    private var colorOverlayBitmap: Bitmap? = null
 
     private val maskPaint = Paint().apply { style = Paint.Style.FILL }
+    private val bitmapPaint = Paint(Paint.FILTER_BITMAP_FLAG)
     private val editBorderPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = Color.argb(170, 123, 143, 191)
         style = Paint.Style.STROKE
@@ -74,10 +78,19 @@ class MaskView(
 
     private fun updatePaint() {
         val alpha = if (isPeeking) 25 else (data.alpha * 255).toInt()
-        maskPaint.color = Color.argb(alpha, 0, 0, 0)
+        maskPaint.color = if (data.effectMode == MaskData.MODE_COLOR_MATCH) {
+            Color.argb(min(alpha, 55), Color.red(data.replaceColor), Color.green(data.replaceColor), Color.blue(data.replaceColor))
+        } else {
+            Color.argb(alpha, 0, 0, 0)
+        }
     }
 
     override fun onDraw(canvas: Canvas) {
+        if (data.effectMode == MaskData.MODE_COLOR_MATCH && !editMode) {
+            colorOverlayBitmap?.let { canvas.drawBitmap(it, 0f, 0f, bitmapPaint) }
+            return
+        }
+
         canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), maskPaint)
         if (!editMode) return
 
@@ -200,6 +213,100 @@ class MaskView(
     fun setMaskAlpha(a: Float) {
         data.alpha = a
         if (!isPeeking) updatePaint()
+        invalidate()
+    }
+
+    fun setColorMatchEnabled(enabled: Boolean) {
+        data.effectMode = if (enabled) MaskData.MODE_COLOR_MATCH else MaskData.MODE_SHADE
+        if (!enabled) {
+            colorOverlayBitmap?.recycle()
+            colorOverlayBitmap = null
+        }
+        updatePaint()
+        invalidate()
+    }
+
+    fun setColorMatchSettings(matchColor: Int, replaceColor: Int, tolerance: Int, radius: Int) {
+        data.matchColor = matchColor
+        data.replaceColor = replaceColor
+        data.colorTolerance = tolerance.coerceIn(0, 255)
+        data.spreadRadius = radius.coerceIn(0, 48)
+        updatePaint()
+        invalidate()
+    }
+
+    private val locOnScreen = IntArray(2)
+
+    fun updateScreenFrame(screen: Bitmap?) {
+        if (screen == null || data.effectMode != MaskData.MODE_COLOR_MATCH || editMode || visibility != VISIBLE) return
+        if (width <= 0 || height <= 0) return
+
+        getLocationOnScreen(locOnScreen)
+        val viewX = locOnScreen[0]
+        val viewY = locOnScreen[1]
+        val sourceX = max(0, viewX)
+        val sourceY = max(0, viewY)
+        val destX = max(0, -viewX)
+        val destY = max(0, -viewY)
+        val copyW = min(width - destX, screen.width - sourceX)
+        val copyH = min(height - destY, screen.height - sourceY)
+        if (copyW <= 0 || copyH <= 0) return
+
+        val pixels = IntArray(width * height)
+        for (row in 0 until copyH) {
+            screen.getPixels(pixels, (destY + row) * width + destX, width, sourceX, sourceY + row, copyW, 1)
+        }
+
+        val matched = BooleanArray(pixels.size)
+        val mr = Color.red(data.matchColor)
+        val mg = Color.green(data.matchColor)
+        val mb = Color.blue(data.matchColor)
+        val toleranceSq = data.colorTolerance * data.colorTolerance * 3
+
+        for (y in destY until destY + copyH) {
+            val rowOffset = y * width
+            for (x in destX until destX + copyW) {
+                val idx = rowOffset + x
+                val c = pixels[idx]
+                val dr = Color.red(c) - mr
+                val dg = Color.green(c) - mg
+                val db = Color.blue(c) - mb
+                if (dr * dr + dg * dg + db * db <= toleranceSq) {
+                    matched[idx] = true
+                }
+            }
+        }
+
+        val out = IntArray(pixels.size)
+        val radius = data.spreadRadius
+        val radiusSq = radius * radius
+        for (idx in matched.indices) {
+            if (!matched[idx]) continue
+            val cx = idx % width
+            val cy = idx / width
+            val left = max(0, cx - radius)
+            val right = min(width - 1, cx + radius)
+            val top = max(0, cy - radius)
+            val bottom = min(height - 1, cy + radius)
+            for (y in top..bottom) {
+                val dy = y - cy
+                val rowOffset = y * width
+                for (x in left..right) {
+                    val dx = x - cx
+                    if (dx * dx + dy * dy <= radiusSq) {
+                        out[rowOffset + x] = data.replaceColor
+                    }
+                }
+            }
+        }
+
+        val bitmap = if (colorOverlayBitmap?.width == width && colorOverlayBitmap?.height == height) {
+            colorOverlayBitmap!!
+        } else {
+            colorOverlayBitmap?.recycle()
+            Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888).also { colorOverlayBitmap = it }
+        }
+        bitmap.setPixels(out, 0, width, 0, 0, width, height)
         invalidate()
     }
 }

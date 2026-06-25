@@ -7,10 +7,11 @@
 **一款专为刷题复盘打造的开源安卓全局悬浮遮罩工具**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Version](https://img.shields.io/badge/Version-1.1.0-informational.svg)](#)
 [![Platform](https://img.shields.io/badge/Platform-Android%209%2B-green.svg)](#)
 [![Kotlin](https://img.shields.io/badge/Kotlin-1.9.22-purple.svg)](#)
-[![No Root](https://img.shields.io/badge/Root-Not%20Required-success.svg)](#)
-[![APK Size](https://img.shields.io/badge/Release%20APK-2.65%20MB-lightgrey.svg)](#)
+<!-- [![No Root](https://img.shields.io/badge/Root-Not%20Required-success.svg)](#) -->
+<!-- [![APK Size](https://img.shields.io/badge/Release%20APK-2.65%20MB-lightgrey.svg)](#) -->
 
 </div>
 
@@ -20,13 +21,13 @@
 
 **晦页**取自书卷意境：「晦」代表遮蔽隐藏，「页」对应习题、试卷页面。
 
-刷题时答案和题干往往同屏显示，靠手挡、靠便利贴遮答案的复盘体验都不够清爽。市面上同类工具要么绑定具体阅读器、要么塞满广告与冗余功能。LuminShade 只做一件事——**在任意应用上层悬浮纯黑遮罩**，让你独立思考、按需揭晓答案。
+刷题时答案和题干往往同屏显示，靠手挡、靠便利贴遮答案的复盘体验都不够清爽。市面上同类工具要么绑定具体阅读器、要么塞满广告与冗余功能。LuminShade 的核心目标很明确——**在任意应用上层悬浮遮罩**，让你独立思考、按需揭晓答案；需要更精细处理时，也可以用颜色匹配模式只替换遮罩区域内的指定颜色。
 
 ## 设计原则
 
-- **极致专一**：只做遮挡，不做笔记、搜题、截图、录屏
+- **极致专一**：只做遮挡与局部颜色替换，不做笔记、搜题、图片管理
 - **轻量**：Release APK 约 2.6 MB，依赖仅限 AndroidX / Material Components 等官方库，无任何第三方 SDK
-- **极致克制**：仅申请 `SYSTEM_ALERT_WINDOW` 一项权限
+- **极致克制**：基础遮罩仅需 `SYSTEM_ALERT_WINDOW`；颜色匹配模式开启时才请求系统屏幕捕获授权
 - **完全离线**：无网络请求、无埋点、无广告、无推送、无统计
 - **清冷调性**：低饱和深色 UI，无花哨动效，专注学习场景
 
@@ -48,6 +49,17 @@
 ### 透明度调节
 全局滑块控制所有遮罩的不透明度，从纯黑完全遮挡到半透提示。
 
+### 颜色匹配模式
+开启后，遮罩在普通模式下保持透明，通过系统屏幕捕获读取遮罩区域下方画面，将匹配颜色替换为目标颜色。支持：
+
+- 选择匹配颜色与替换颜色（`#RRGGBB` / `#AARRGGBB`）
+- 进入屏幕取色模式，直接点击屏幕像素作为匹配色或替换色
+- 调节匹配容差，适配抗锯齿、压缩、屏幕渲染导致的近似色
+- 调节周边改色范围，把匹配像素外一圈指定半径内的像素一起改色
+- 随预设保存每个遮罩的颜色匹配参数
+
+> 说明：Android 不允许悬浮窗直接修改其他 App 的真实画面。颜色匹配模式的实现方式是读取屏幕画面后，在遮罩位置叠加一层透明背景的改色结果。
+
 ## 交互一览
 
 | 手势 | 行为 |
@@ -60,6 +72,20 @@
 | **拖动遮罩右下角 ⇲**（编辑模式） | 独立调节宽高，不锁比例 |
 | **点击右上角 ×**（编辑模式） | 删除该遮罩 |
 | **长按遮罩**（普通模式） | 临时透明窥视下方答案，松手立即恢复 |
+
+## 颜色匹配使用
+
+1. 在主界面开启「颜色匹配模式」
+2. 按系统弹窗授予「开始录制或投射」权限
+3. 点击「匹配颜色」/「替换为」手动输入颜色，或点击「屏幕取匹配色」/「屏幕取替换色」
+4. 使用屏幕取色时，应用会退到后台并显示一个可拖动的十字取色球
+5. 取色期间屏幕其他区域可正常操作，你可以先切到要处理的软件页面，再拖动十字球压到目标像素上
+6. 左上角会实时显示当前像素色号、色块和 9×9 放大区域
+7. 在左上角预览面板点击「确认」完成取色，点击「取消」退出取色
+8. 调整「匹配容差」与「周边改色范围」
+9. 进入编辑模式调整遮罩覆盖范围，退出编辑模式后查看改色效果
+
+颜色匹配模式下，遮罩本身在普通模式中是透明的，只显示被替换后的像素；编辑模式仍会显示淡色遮罩、边框、删除按钮和缩放手柄，方便定位。
 
 ## 截图
 
@@ -85,6 +111,7 @@
 1. 打开晦页，按引导前往「**显示在其他应用上层**」设置授权
 2. （可选）前往「**电池优化**」设置，将晦页设为「**不优化**」以防被系统进程杀掉
 3. 返回主界面，点击「**+ 新建遮罩**」开始使用
+4. （可选）开启「**颜色匹配模式**」时，按系统弹窗授予屏幕捕获权限
 
 ## 从源码构建
 
@@ -107,9 +134,6 @@ app/build/outputs/apk/debug/app-debug.apk
 app/build/outputs/apk/release/app-release-unsigned.apk
 ```
 
-### 国内构建加速
-若 Maven Central / Google 仓库下载缓慢，可在 `~/.gradle/init.gradle` 添加阿里云镜像（项目根目录提供了示例）。
-
 ## 技术栈
 
 | 项目 | 选型 |
@@ -127,22 +151,23 @@ app/build/outputs/apk/release/app-release-unsigned.apk
 - `WindowManager` + `TYPE_APPLICATION_OVERLAY` 实现全局悬浮层
 - 自定义 `View.onDraw` / `onTouchEvent` 处理拖动、角点缩放、长按 peek
 - `Service` + 前台通知（Android 14+ 使用 `FOREGROUND_SERVICE_TYPE_SPECIAL_USE`）保活
+- `MediaProjection` + `ImageReader` 捕获屏幕帧，用于颜色匹配模式下的遮罩区域像素替换
 - 全程无任何反射、无任何动态加载、无任何后台定时任务
 
 ### 项目结构
 
 ```
 app/src/main/
-├── AndroidManifest.xml         仅声明 SYSTEM_ALERT_WINDOW 与前台服务
+├── AndroidManifest.xml         悬浮窗、前台服务与屏幕捕获服务声明
 ├── java/com/luminshade/
-│   ├── MainActivity.kt         主界面：权限引导、预设管理、透明度调节
-│   ├── OverlayService.kt       前台服务：管理所有悬浮层生命周期
-│   ├── MaskView.kt             遮罩自定义视图：拖动 / 角点缩放 / 长按 peek
+│   ├── MainActivity.kt         主界面：权限引导、预设管理、透明度与颜色匹配控制
+│   ├── OverlayService.kt       前台服务：管理悬浮层、屏幕捕获与改色帧分发
+│   ├── MaskView.kt             遮罩自定义视图：拖动 / 缩放 / 长按 peek / 颜色匹配绘制
 │   ├── FloatingBallView.kt     悬浮控制球：边缘吸附 / 短按 / 长按 / 拖动
 │   ├── PresetAdapter.kt        预设列表 RecyclerView 适配器
 │   ├── PresetManager.kt        预设持久化（SharedPreferences + JSON）
 │   └── data/
-│       ├── MaskData.kt         单块遮罩数据模型
+│       ├── MaskData.kt         单块遮罩数据模型（含颜色匹配参数）
 │       └── PresetData.kt       预设数据模型
 └── res/                        极简深色主题资源
 ```
@@ -155,6 +180,7 @@ app/src/main/
 - ❌ 无埋点 / 统计 / 行为分析 SDK
 - ❌ 无广告 / 推送 / 个性化推荐
 - ❌ 不读取存储 / 相机 / 定位 / 通讯录 / 任何用户文件
+- ✅ 颜色匹配模式会使用 Android 系统屏幕捕获授权，仅在本机内存中处理当前屏幕帧，不保存、不上传
 - ✅ 仅本地保存预设布局（位于应用私有目录的 SharedPreferences）
 
 ## 开源协议

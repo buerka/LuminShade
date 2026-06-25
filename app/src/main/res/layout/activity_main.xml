@@ -119,6 +119,101 @@
             android:thumbTint="@color/accent"
             android:layout_marginBottom="24dp" />
 
+        <Switch
+            android:id="@+id/switch_color_match"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/label_color_match"
+            android:textColor="@color/text_primary"
+            android:textSize="14sp"
+            android:layout_marginBottom="10dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="12dp">
+
+            <Button
+                android:id="@+id/btn_match_color"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:text="@string/btn_match_color"
+                style="@style/BtnSecondary"
+                android:layout_marginEnd="8dp" />
+
+            <Button
+                android:id="@+id/btn_replace_color"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:text="@string/btn_replace_color"
+                style="@style/BtnSecondary" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="12dp">
+
+            <Button
+                android:id="@+id/btn_pick_match_color"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:text="@string/btn_pick_match_color"
+                style="@style/BtnSecondary"
+                android:layout_marginEnd="8dp" />
+
+            <Button
+                android:id="@+id/btn_pick_replace_color"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:text="@string/btn_pick_replace_color"
+                style="@style/BtnSecondary" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_tolerance_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_secondary"
+            android:textSize="13sp"
+            android:layout_marginBottom="4dp"
+            tools:text="匹配容差：24" />
+
+        <SeekBar
+            android:id="@+id/seekbar_tolerance"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="120"
+            android:progress="24"
+            android:progressTint="@color/accent"
+            android:thumbTint="@color/accent"
+            android:layout_marginBottom="10dp" />
+
+        <TextView
+            android:id="@+id/tv_spread_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_secondary"
+            android:textSize="13sp"
+            android:layout_marginBottom="4dp"
+            tools:text="周边改色范围：1 px" />
+
+        <SeekBar
+            android:id="@+id/seekbar_spread"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="24"
+            android:progress="1"
+            android:progressTint="@color/accent"
+            android:thumbTint="@color/accent"
+            android:layout_marginBottom="24dp" />
+
         <!-- Preset Section -->
         <LinearLayout
             android:layout_width="match_parent"
