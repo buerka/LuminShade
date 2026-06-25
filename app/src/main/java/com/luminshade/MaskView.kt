@@ -9,6 +9,7 @@ import android.graphics.Paint
 import android.view.HapticFeedbackConstants
 import android.view.MotionEvent
 import android.view.View
+
 import android.view.WindowManager
 import com.luminshade.data.MaskData
 import kotlin.math.abs
@@ -31,6 +32,7 @@ class MaskView(
     var windowManager: WindowManager? = null
 
     private var isPeeking = false
+    private var ballPeeking = false
     private var colorOverlayBitmap: Bitmap? = null
 
     private val maskPaint = Paint().apply { style = Paint.Style.FILL }
@@ -77,7 +79,7 @@ class MaskView(
     init { updatePaint() }
 
     private fun updatePaint() {
-        val alpha = if (isPeeking) 25 else (data.alpha * 255).toInt()
+        val alpha = if (isPeeking || ballPeeking) 25 else (data.alpha * 255).toInt()
         maskPaint.color = if (data.effectMode == MaskData.MODE_COLOR_MATCH) {
             Color.argb(min(alpha, 55), Color.red(data.replaceColor), Color.green(data.replaceColor), Color.blue(data.replaceColor))
         } else {
@@ -87,7 +89,9 @@ class MaskView(
 
     override fun onDraw(canvas: Canvas) {
         if (data.effectMode == MaskData.MODE_COLOR_MATCH && !editMode) {
-            colorOverlayBitmap?.let { canvas.drawBitmap(it, 0f, 0f, bitmapPaint) }
+            if (!ballPeeking) {
+                colorOverlayBitmap?.let { canvas.drawBitmap(it, 0f, 0f, bitmapPaint) }
+            }
             return
         }
 
@@ -222,6 +226,13 @@ class MaskView(
             colorOverlayBitmap?.recycle()
             colorOverlayBitmap = null
         }
+        updatePaint()
+        invalidate()
+    }
+
+    fun setBallPeek(peeking: Boolean) {
+        if (ballPeeking == peeking) return
+        ballPeeking = peeking
         updatePaint()
         invalidate()
     }

@@ -224,6 +224,10 @@ class OverlayService : Service() {
         maskViews.forEach { it.setMaskAlpha(alpha) }
     }
 
+    private fun setBallPeekAll(peeking: Boolean) {
+        maskViews.forEach { it.setBallPeek(peeking) }
+    }
+
     private fun loadColorMatchPrefs() {
         val prefs = getSharedPreferences(SETTINGS_PREFS, MODE_PRIVATE)
         currentMatchColor = prefs.getInt("match_color", currentMatchColor)
@@ -542,7 +546,9 @@ class OverlayService : Service() {
             context = this,
             onToggleVisibility = { toggleVisibility() },
             onToggleEditMode = { toggleEditMode() },
-            onAddMask = { addMask() }
+            onAddMask = { addMask() },
+            onPeekStart = { setBallPeekAll(true) },
+            onPeekEnd = { setBallPeekAll(false) }
         )
         val dm = resources.displayMetrics
         val size = (56 * dm.density).toInt()

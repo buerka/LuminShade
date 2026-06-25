@@ -17,7 +17,9 @@ class FloatingBallView(
     context: Context,
     private val onToggleVisibility: () -> Unit,
     private val onToggleEditMode: () -> Unit,
-    private val onAddMask: () -> Unit
+    private val onAddMask: () -> Unit,
+    private val onPeekStart: () -> Unit,
+    private val onPeekEnd: () -> Unit
 ) : View(context) {
 
     var masksVisible = true
@@ -40,8 +42,12 @@ class FloatingBallView(
     private var startViewY = 0
     private var isDragging = false
     private var longPressFired = false
+    private var peeking = false
+    private var peekFired = false
 
+    private var peekRunnable: Runnable? = null
     private var longPressRunnable: Runnable? = null
+    private val PEEK_MS = 200L
     private val LONG_PRESS_MS = 550L
 
     override fun onDraw(canvas: Canvas) {
@@ -79,14 +85,29 @@ class FloatingBallView(
                 startViewY = lp.y
                 isDragging = false
                 longPressFired = false
+                peeking = false
+                peekFired = false
 
+                peekRunnable = Runnable {
+                    if (!isDragging) {
+                        peeking = true
+                        peekFired = true
+                        performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
+                        onPeekStart()
+                    }
+                }
                 longPressRunnable = Runnable {
                     if (!isDragging) {
+                        if (peeking) {
+                            peeking = false
+                            onPeekEnd()
+                        }
                         longPressFired = true
                         performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
                         onToggleEditMode()
                     }
                 }
+                postDelayed(peekRunnable, PEEK_MS)
                 postDelayed(longPressRunnable, LONG_PRESS_MS)
                 return true
             }
@@ -96,7 +117,12 @@ class FloatingBallView(
                 val dy = event.rawY - startRawY
                 if (!isDragging && (abs(dx) > 10 || abs(dy) > 10)) {
                     isDragging = true
+                    peekRunnable?.let { removeCallbacks(it) }
                     longPressRunnable?.let { removeCallbacks(it) }
+                    if (peeking) {
+                        peeking = false
+                        onPeekEnd()
+                    }
                 }
                 if (isDragging) {
                     lp.x = (startViewX + dx).toInt()
@@ -107,17 +133,27 @@ class FloatingBallView(
             }
 
             MotionEvent.ACTION_UP -> {
+                peekRunnable?.let { removeCallbacks(it) }
                 longPressRunnable?.let { removeCallbacks(it) }
+                if (peeking) {
+                    peeking = false
+                    onPeekEnd()
+                }
                 if (isDragging) {
                     snapToEdge(lp, wm)
-                } else if (!longPressFired) {
+                } else if (!longPressFired && !peekFired) {
                     if (editMode) onAddMask() else onToggleVisibility()
                 }
                 return true
             }
 
             MotionEvent.ACTION_CANCEL -> {
+                peekRunnable?.let { removeCallbacks(it) }
                 longPressRunnable?.let { removeCallbacks(it) }
+                if (peeking) {
+                    peeking = false
+                    onPeekEnd()
+                }
                 return true
             }
         }
